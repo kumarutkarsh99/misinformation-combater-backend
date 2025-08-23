@@ -1,17 +1,44 @@
-import vertexai
-from vertexai.generative_models import GenerativeModel, Part
+import google.generativeai as genai
 from app.core.config import settings
 import json
 
-# Initialize Vertex AI
-vertexai.init(project=settings.GCP_PROJECT, location=settings.GCP_LOCATION)
+# Configure the new Gemini API key
+genai.configure(api_key=settings.GEMINI_API_KEY)
+
+def generate_search_query(text_to_summarize: str) -> str:
+    """Uses Gemini to generate a concise search query from a block of text."""
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    
+    prompt = f"""
+    Read the following text and summarize it into a clean, simple search engine query of 5-10 keywords.
+    
+    TEXT:
+    "{text_to_summarize[:1000]}"
+
+    SEARCH QUERY:
+    """
+    
+    try:
+        response = model.generate_content(prompt)
+        return response.text.strip()
+    except Exception as e:
+        print(f"Error generating search query: {e}")
+        # Fallback to using the raw text if the AI fails
+        return text_to_summarize[:100]
 
 def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
     """
-    Analyzes user content using Gemini, providing search results as context.
+    Analyzes user content using the Google AI Gemini API.
     """
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
+    safety_settings = {
+        'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH',
+        'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_ONLY_HIGH',
+        'HARM_CATEGORY_SEXUALLY_EXPLICIT': 'BLOCK_ONLY_HIGH',
+        'HARM_CATEGORY_DANGEROUS_CONTENT': 'BLOCK_ONLY_HIGH',
+    }
+    
     prompt = f"""
     You are a neutral, unbiased fact-checking analyst. Your task is to analyze a piece of user-submitted content against a set of search results from trusted, credible sources and provide an educational report.
 
@@ -27,21 +54,31 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
       "credibility_score": <An integer from 0 (Highly Misleading) to 100 (Highly Credible)>,
       "summary": "<A brief, neutral summary of what the trusted sources say about this topic.>",
       "analysis": "<Explain WHY the user's content might be misleading in a simple, educational way. Identify specific manipulative techniques like emotional language, false urgency, or unsourced claims if present.>",
-      "sources": ["<A list of up to 3 relevant source URLs from the provided context>"]
+      "sources": ["<A list of the top 3 'Source URL' values provided in the context. Do not make up URLs. If no URLs are in the context, return an empty list.>"]
     }}
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt,
+            safety_settings=safety_settings
+        )
         
-        # Clean the response to extract the JSON object
+        # Check for an empty response due to safety filters
+        if not response.parts:
+            return {
+                "credibility_score": -1,
+                "summary": "Response blocked due to safety concerns.",
+                "analysis": "The AI's safety filters were triggered by the input content or the search results.",
+                "sources": []
+            }
+
         raw_text = response.text.strip()
         json_text = raw_text[raw_text.find('{'):raw_text.rfind('}')+1]
         
         return json.loads(json_text)
     except Exception as e:
-        print(f"Error calling Vertex AI: {e}")
-        # Return a default error structure
+        print(f"Error calling Google AI: {e}")
         return {
             "credibility_score": -1,
             "summary": "Could not analyze the content due to an internal error.",

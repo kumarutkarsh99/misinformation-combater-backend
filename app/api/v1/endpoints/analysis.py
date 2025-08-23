@@ -9,14 +9,15 @@ router = APIRouter()
 async def analyze_content(request: AnalysisRequest):
     content_to_analyze = request.content
     
-    # Check if the content is a URL
     is_url = urlparse(content_to_analyze).scheme in ('http', 'https')
     
     if is_url:
         scraped_text = scraping_service.scrape_url(content_to_analyze)
         if not scraped_text:
             raise HTTPException(status_code=400, detail="Could not retrieve content from the URL.")
-        query_text = scraped_text[:500] # Use the first 500 chars for a search query
+        
+        # NEW: Use the AI to generate a clean search query
+        query_text = ai_service.generate_search_query(scraped_text)
     else:
         query_text = content_to_analyze
 
@@ -25,12 +26,13 @@ async def analyze_content(request: AnalysisRequest):
     
     search_context = ""
     if search_results and "items" in search_results:
-        # Create a simple context string from search result snippets
-        snippets = [item.get("snippet", "") for item in search_results["items"]]
-        search_context = " ".join(snippets)
+        snippets_with_urls = [
+            f"Source URL: {item.get('link', '')}\nSnippet: {item.get('snippet', '')}"
+            for item in search_results["items"]
+        ]
+        search_context = "\n---\n".join(snippets_with_urls)
 
     if not search_context:
-        # Handle cases with no search results gracefully
         search_context = "No information found in credible sources."
 
     # Step 3: Call the AI for the final analysis

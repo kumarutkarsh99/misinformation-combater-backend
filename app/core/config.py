@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     # Search API Settings
     SEARCH_API_KEY: str
     SEARCH_ENGINE_ID: str
+
+    GEMINI_API_KEY: str
     
     # Load the trusted sources list into your settings
     TRUSTED_SOURCES: List[str] = load_trusted_sources()
