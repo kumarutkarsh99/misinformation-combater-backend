@@ -16,12 +16,15 @@ async def analyze_content(request: AnalysisRequest):
         if not scraped_text:
             raise HTTPException(status_code=400, detail="Could not retrieve content from the URL.")
         
-        # NEW: Use the AI to generate a clean search query
-        query_text = ai_service.generate_search_query(scraped_text)
+        # ADVANCED LOGIC: First, summarize the entire article
+        summary_of_article = ai_service.summarize_full_text(scraped_text)
+        
+        # THEN, generate a search query from that summary
+        query_text = ai_service.generate_search_query(summary_of_article)
     else:
         query_text = content_to_analyze
 
-    # Step 2: Get context from credible sources
+    # The rest of the process remains the same
     search_results = search_service.search_credible_sources(query_text)
     
     search_context = ""
@@ -35,7 +38,6 @@ async def analyze_content(request: AnalysisRequest):
     if not search_context:
         search_context = "No information found in credible sources."
 
-    # Step 3: Call the AI for the final analysis
     analysis_result = ai_service.analyze_content_with_ai(
         user_content=content_to_analyze,
         search_context=search_context

@@ -5,6 +5,28 @@ import json
 # Configure the new Gemini API key
 genai.configure(api_key=settings.GEMINI_API_KEY)
 
+
+def summarize_full_text(full_text: str) -> str:
+    """Uses Gemini to create a concise summary of a long document."""
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    
+    # We use a shorter text snippet to avoid using too many tokens for a simple summary
+    prompt = f"""
+    Please read the following document and provide a concise, one-paragraph summary of its key ideas.
+
+    DOCUMENT:
+    "{full_text[:8000]}"
+    """
+    
+    try:
+        response = model.generate_content(prompt)
+        return response.text.strip()
+    except Exception as e:
+        print(f"Error summarizing full text: {e}")
+        # Fallback to just using the start of the text
+        return full_text[:1000]
+
+
 def generate_search_query(text_to_summarize: str) -> str:
     """Uses Gemini to generate a concise search query from a block of text."""
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
@@ -13,7 +35,7 @@ def generate_search_query(text_to_summarize: str) -> str:
     Read the following text and summarize it into a clean, simple search engine query of 5-10 keywords.
     
     TEXT:
-    "{text_to_summarize[:1000]}"
+    "{text_to_summarize}"
 
     SEARCH QUERY:
     """
@@ -25,6 +47,7 @@ def generate_search_query(text_to_summarize: str) -> str:
         print(f"Error generating search query: {e}")
         # Fallback to using the raw text if the AI fails
         return text_to_summarize[:100]
+
 
 def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
     """
@@ -64,7 +87,6 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
             safety_settings=safety_settings
         )
         
-        # Check for an empty response due to safety filters
         if not response.parts:
             return {
                 "credibility_score": -1,
