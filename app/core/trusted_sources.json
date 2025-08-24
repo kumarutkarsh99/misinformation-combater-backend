@@ -1,0 +1,27 @@
+{
+  "sources": [
+    "reuters.com",
+    "apnews.com",
+    "afp.com",
+    "bbc.com",
+    "theguardian.com",
+    "nytimes.com",
+    "wsj.com",
+    "thehindu.com",
+    "indianexpress.com",
+    "timesofindia.indiatimes.com",
+    "ndtv.com",
+    "theprint.in",
+    "pib.gov.in",
+    "prsindia.org",
+    "snopes.com",
+    "politifact.com",
+    "factcheck.org",
+    "boomlive.in",
+    "altnews.in",
+    "factly.in",
+    "thelancet.com",
+    "nature.com",
+    "science.org"
+  ]
+}
