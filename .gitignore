@@ -3,3 +3,7 @@
 google*.json
 
 misinfovenv
+
+myenv
+
+**__pycache__
