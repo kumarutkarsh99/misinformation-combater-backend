@@ -9,7 +9,7 @@ def search_credible_sources(query: str) -> Optional[Dict[str, Any]]:
         "key": settings.SEARCH_API_KEY,
         "cx": settings.SEARCH_ENGINE_ID,
         "q": query,
-        "num": 5 # Request top 5 results
+        "num": 5
     }
     
     try:

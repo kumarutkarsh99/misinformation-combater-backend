@@ -16,24 +16,23 @@ async def analyze_content(request: AnalysisRequest):
         if not scraped_text:
             raise HTTPException(status_code=400, detail="Could not retrieve content from the URL.")
         
-        # ADVANCED LOGIC: First, summarize the entire article
         summary_of_article = ai_service.summarize_full_text(scraped_text)
-        
-        # THEN, generate a search query from that summary
         query_text = ai_service.generate_search_query(summary_of_article)
     else:
         query_text = content_to_analyze
 
-    # The rest of the process remains the same
     search_results = search_service.search_credible_sources(query_text)
     
     search_context = ""
     if search_results and "items" in search_results:
-        snippets_with_urls = [
-            f"Source URL: {item.get('link', '')}\nSnippet: {item.get('snippet', '')}"
-            for item in search_results["items"]
-        ]
-        search_context = "\n---\n".join(snippets_with_urls)
+        snippets_with_info = []
+        for item in search_results["items"]:
+            url = item.get('link', '')
+            domain_name = urlparse(url).netloc
+            snippets_with_info.append(
+                f"Source Name: {domain_name}\nSource URL: {url}\nSnippet: {item.get('snippet', '')}"
+            )
+        search_context = "\n---\n".join(snippets_with_info)
 
     if not search_context:
         search_context = "No information found in credible sources."
