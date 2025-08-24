@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 class AnalysisRequest(BaseModel):
     content: str
@@ -26,5 +26,5 @@ class AnalysisResponse(BaseModel):
     analysis: str
     metrics: Metrics
     sources: List[Source]
-    formal_report: str
+    formal_report: Optional[str] = None
     raw: RawData

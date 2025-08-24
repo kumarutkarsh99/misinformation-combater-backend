@@ -137,7 +137,10 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
         
         result = json.loads(json_text)
         result['raw']['ts'] = int(time.time() * 1000)
-        
+
+        if result.get("credibility_score", 0) > 74:
+            result.pop("formal_report", None)
+
         return result
     except Exception as e:
         print("\n--- DEBUG: FAILED TO PARSE AI RESPONSE ---")
