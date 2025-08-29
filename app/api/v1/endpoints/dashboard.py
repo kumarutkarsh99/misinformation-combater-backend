@@ -23,6 +23,26 @@ async def get_heatmap_data():
             ])
     return points
 
+@router.get("/recentReports")
+async def get_heatmap_data():
+    """Endpoint to provide data for the misinformation heatmap."""
+    reports = database_service.get_recent_reports(hours=48)
+
+    result = []
+    for report in reports:
+        report_dict = report.to_dict()
+
+        location = report_dict.get("location")
+        if location and hasattr(location, "latitude") and hasattr(location, "longitude"):
+            report_dict["location"] = {
+                "latitude": location.latitude,
+                "longitude": location.longitude
+            }
+
+        result.append(report_dict)
+
+    return result
+
 
 @router.get("/categories")
 async def get_category_data():
