@@ -60,6 +60,7 @@ async def analyze_content(request: AnalysisRequest):
                     timestamp=datetime.now(timezone.utc),
                     credibility_score=analysis_result["credibility_score"],
                     category=analysis_result["category"],
+                    report_summary=analysis_result["report_summary"],
                     location=firestore.GeoPoint(request.latitude, request.longitude),
                     source_domains=[source.get('url', '') for source in analysis_result.get("sources", [])]
                 )

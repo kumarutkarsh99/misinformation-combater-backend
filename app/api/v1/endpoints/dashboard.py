@@ -16,10 +16,12 @@ async def get_heatmap_data():
 
         # Firestore returns GeoPoint objects, so access attributes instead of keys
         if location and hasattr(location, "latitude") and hasattr(location, "longitude"):
+            credibility_score = report_dict.get('credibility_score', 50)
+            intensity = (100 - credibility_score) / 100.0
             points.append([
                 location.latitude,
                 location.longitude,
-                0.5
+                intensity 
             ])
     return points
 

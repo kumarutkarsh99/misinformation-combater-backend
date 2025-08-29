@@ -13,6 +13,7 @@ class Report(BaseModel):
     category: str
     location: GeoPoint
     source_domains: List[str]
+    report_summary: str
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
