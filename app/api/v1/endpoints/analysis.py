@@ -2,6 +2,9 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.analysis import AnalysisRequest, AnalysisResponse
 from app.services import scraping_service, search_service, ai_service
 from urllib.parse import urlparse
+from app.services.database_service import Report, save_report
+from datetime import datetime, timezone
+from google.cloud import firestore
 
 router = APIRouter()
 
@@ -44,5 +47,28 @@ async def analyze_content(request: AnalysisRequest):
 
     if analysis_result.get("credibility_score", -1) == -1:
         raise HTTPException(status_code=500, detail="Failed to get analysis from the AI model.")
+    
+    if analysis_result.get("credibility_score", -1) != -1:
+        # --- ADD THIS NEW BLOCK ---
+        if request.latitude and request.longitude:
+            try:
+                # 1. Get the state name from coordinates
+                # state_name = ai_service.get_state_from_coords(request.latitude, request.longitude)
+
+                # 2. Prepare the report data
+                report_to_save = Report(
+                    timestamp=datetime.now(timezone.utc),
+                    credibility_score=analysis_result["credibility_score"],
+                    category=analysis_result["category"],
+                    location=firestore.GeoPoint(request.latitude, request.longitude),
+                    source_domains=[source.get('url', '') for source in analysis_result.get("sources", [])]
+                )
+
+                # 3. Save the data to Firestore
+                save_report(report_to_save)
+
+            except Exception as e:
+                print(f"Failed to save report to database: {e}")
 
     return AnalysisResponse(**analysis_result)
+

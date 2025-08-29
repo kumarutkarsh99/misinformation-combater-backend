@@ -158,3 +158,14 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
             "formal_report": "Could not generate a report due to an internal error.",
             "raw": {"ts": int(time.time() * 1000)}
         }
+
+def get_state_from_coords(latitude: float, longitude: float) -> str:
+    """Uses Gemini to get the Indian state from latitude and longitude."""
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    prompt = f"What Indian state is at latitude {latitude}, longitude {longitude}? Respond with only the name of the state, or 'Unknown' if it's not in India."
+    try:
+        response = model.generate_content(prompt)
+        return response.text.strip()
+    except Exception as e:
+        print(f"Error in reverse geocoding: {e}")
+        return "Unknown"

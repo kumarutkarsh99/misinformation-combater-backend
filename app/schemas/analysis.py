@@ -3,6 +3,8 @@ from typing import List, Dict, Optional
 
 class AnalysisRequest(BaseModel):
     content: str
+    latitude: Optional[float] = None 
+    longitude: Optional[float] = None
 
 class Metrics(BaseModel):
     clarity: int
