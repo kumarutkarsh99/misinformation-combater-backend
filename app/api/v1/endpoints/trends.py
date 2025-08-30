@@ -139,7 +139,7 @@ async def get_radar_data():
         "tone": round(sum_tone / valid_reports),
         "correctness": round(sum_correctness / valid_reports),
         "originality": round(sum_originality / valid_reports),
-        "credibility_score": round(sum_credibility / total_reports)
+        "score": round(sum_credibility / total_reports)
     }
 
 @router.get("/sources")
