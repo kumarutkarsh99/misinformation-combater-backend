@@ -59,6 +59,7 @@ async def get_category_data():
         "Science", 
         "Social", 
         "Satire",
+        "Geopolitics",
         "None",
         "Other"
     ]
