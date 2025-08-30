@@ -2,6 +2,9 @@ from fastapi import APIRouter
 from app.services import database_service
 from collections import Counter
 from datetime import datetime, timedelta, timezone
+from thefuzz import process as fuzzy_process
+from itertools import chain
+from urllib.parse import urlparse
 
 router = APIRouter()
 
@@ -104,3 +107,23 @@ async def get_radar_data():
         "originality": round(sum_originality / valid_reports),
         "credibility_score": round(sum_credibility / total_reports)
     }
+
+@router.get("/sources")
+async def get_sources_data():
+    """
+    Endpoint to get a list of the most frequently used source domains
+    from reports in the last 48 hours.
+    """
+    reports = database_service.get_reports_since(days=2)
+    all_domains = list(chain.from_iterable(
+        [urlparse(url).netloc for url in report.get('source_domains', [])] 
+        for report in reports
+    ))
+    
+    domain_counts = Counter(all_domains)
+    top_sources = [
+        {"domain": domain, "count": count}
+        for domain, count in domain_counts.most_common(10)
+    ]
+            
+    return {"top_sources": top_sources}
