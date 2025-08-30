@@ -14,6 +14,7 @@ class Report(BaseModel):
     location: GeoPoint
     source_domains: List[str]
     report_summary: str
+    metrics: Dict[str, int]
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

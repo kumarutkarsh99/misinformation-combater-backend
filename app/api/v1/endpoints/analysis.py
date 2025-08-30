@@ -62,6 +62,7 @@ async def analyze_content(request: AnalysisRequest):
                     category=analysis_result["category"],
                     report_summary=analysis_result["report_summary"],
                     location=firestore.GeoPoint(request.latitude, request.longitude),
+                    metrics = analysis_result["metrics"],
                     source_domains=[source.get('url', '') for source in analysis_result.get("sources", [])]
                 )
 

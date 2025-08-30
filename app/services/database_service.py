@@ -17,8 +17,9 @@ def save_report(report_data: Report):
         print(f"Error saving report to Firestore: {e}")
 
 
-def get_recent_reports(hours: int):
-    """Fetches all reports from the last X hours."""
-    time_threshold = datetime.now(timezone.utc) - timedelta(hours=hours)
+def get_reports_since(days: int):
+    """Fetches all reports from the last X days as a list of dictionaries."""
+    time_threshold = datetime.now(timezone.utc) - timedelta(days=days)
     reports_ref = db.collection('reports').where('timestamp', '>=', time_threshold)
-    return reports_ref.stream()
+    # Convert each document to a dictionary
+    return [doc.to_dict() for doc in reports_ref.stream()]
