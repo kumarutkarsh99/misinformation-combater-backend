@@ -1,29 +1,32 @@
 from fastapi import APIRouter
 from app.services import database_service
 from collections import Counter
+from google.cloud import firestore
 
 router = APIRouter()
 
 @router.get("/heatmap")
 async def get_heatmap_data():
-    """Endpoint to provide data for the misinformation heatmap."""
+    """Endpoint to provide rich data for the misinformation heatmap."""
     reports = database_service.get_recent_reports(hours=48)
-
+    
     points = []
     for report in reports:
         report_dict = report.to_dict()
         location = report_dict.get('location')
-
-        # Firestore returns GeoPoint objects, so access attributes instead of keys
-        if location and hasattr(location, "latitude") and hasattr(location, "longitude"):
+        
+        if isinstance(location, firestore.GeoPoint):
             credibility_score = report_dict.get('credibility_score', 50)
             intensity = (100 - credibility_score) / 100.0
-            points.append([
-                location.latitude,
-                location.longitude,
-                intensity 
-            ])
-    return points
+
+            points.append({
+                "latitude": location.latitude,
+                "longitude": location.longitude,
+                "report_summary": report_dict.get("report_summary", "No summary available."),
+                "intensity": intensity
+            })
+            
+    return {"points": points}
 
 @router.get("/recentReports")
 async def get_heatmap_data():
