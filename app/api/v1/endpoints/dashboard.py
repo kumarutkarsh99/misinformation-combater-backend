@@ -19,12 +19,13 @@ async def get_heatmap_data():
             credibility_score = report.get('credibility_score', 50)
             intensity = (100 - credibility_score) / 100.0
 
-            points.append({
-                "latitude": location.latitude,
-                "longitude": location.longitude,
-                "report_summary": report.get("report_summary", "No summary available."),
-                "intensity": intensity
-            })
+            if credibility_score < 75:
+                points.append({
+                    "latitude": location.latitude,
+                    "longitude": location.longitude,
+                    "report_summary": report.get("report_summary", "No summary available."),
+                    "intensity": intensity
+                })
             
     return {"points": points}
 
