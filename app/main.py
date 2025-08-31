@@ -15,7 +15,7 @@ origins = [
     "http://localhost:5173", 
     "http://localhost:8080",
     "https://misinformation-combater-frontend.vercel.app",
-    "https://misinformation-combater-386097269689.europe-west1.run.app"
+    "https://misinformation-combater-frontend-386097269689.europe-west1.run.app"
 ]
 
 
