@@ -202,7 +202,7 @@ def get_state_from_coords(lat: float, lon: float):
 
         if location:
             address = location.raw.get('address', {})
-            state = address.get('state')
+            state = address.get('state') or address.get('city')
             
             if state:
                 return state
