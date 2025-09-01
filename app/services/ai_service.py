@@ -6,6 +6,7 @@ import re
 import io
 import PyPDF2
 import docx
+from geopy.geocoders import Nominatim
 
 # Configure the Gemini API key
 genai.configure(api_key=settings.GEMINI_API_KEY)
@@ -188,3 +189,27 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
             "raw": {"ts": int(time.time() * 1000)}
         }
 
+def get_state_from_coords(lat: float, lon: float):
+    """
+    Finds the state for a given latitude and longitude.
+    """
+    try:
+        geolocator = Nominatim(user_agent="state_finder_app")
+
+        location_str = f"{lat}, {lon}"
+
+        location = geolocator.reverse(location_str, exactly_one=True, language='en')
+
+        if location:
+            address = location.raw.get('address', {})
+            state = address.get('state')
+            
+            if state:
+                return state
+            else:
+                return "State not found in the address details."
+        else:
+            return "Could not determine location."
+
+    except Exception as e:
+        return f"An error occurred: {e}"

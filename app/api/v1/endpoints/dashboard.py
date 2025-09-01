@@ -3,6 +3,7 @@ from app.services import database_service
 from collections import Counter
 from google.cloud import firestore
 from thefuzz import process as fuzzy_process
+from app.services import ai_service
 
 router = APIRouter()
 
@@ -39,9 +40,11 @@ async def get_heatmap_data():
 
         location = report.get("location")
         if location and hasattr(location, "latitude") and hasattr(location, "longitude"):
+            statename = ai_service.get_state_from_coords(location.latitude, location.longitude)
             report["location"] = {
                 "latitude": location.latitude,
-                "longitude": location.longitude
+                "longitude": location.longitude, 
+                "state": statename
             }
 
         result.append(report)
