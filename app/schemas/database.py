@@ -12,21 +12,14 @@ class Report(BaseModel):
     credibility_score: int
     category: str
     location: GeoPoint
+    latitude: float
+    longitude: float
+    state: str
     source_domains: List[str]
     report_summary: str
     metrics: Dict[str, int]
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-class HourlyAggregate(BaseModel):
-    """
-    Pydantic model for a single document in the 'hourly_aggregates' collection.
-    This model represents the pre-calculated statistics for a specific hour.
-    """
-    timestamp: datetime
-    totalReports: int
-    averageScore: float
-    categoryCounts: Dict[str, int]
-    locationCounts: Dict[str, int]
 
 

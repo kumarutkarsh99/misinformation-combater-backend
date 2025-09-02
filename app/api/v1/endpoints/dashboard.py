@@ -37,18 +37,8 @@ async def get_heatmap_data():
 
     result = []
     for report in reports:
-
-        location = report.get("location")
-        if location and hasattr(location, "latitude") and hasattr(location, "longitude"):
-            statename = ai_service.get_state_from_coords(location.latitude, location.longitude)
-            report["location"] = {
-                "latitude": location.latitude,
-                "longitude": location.longitude, 
-                "state": statename
-            }
-
-        result.append(report)
-
+        if(report.get('credibility_score') < 74):
+            result.append(report)
     return result
 
 @router.get("/categories")

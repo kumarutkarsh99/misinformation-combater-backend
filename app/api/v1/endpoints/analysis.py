@@ -6,6 +6,7 @@ from app.services.database_service import Report, save_report
 from datetime import datetime, timezone
 from typing import Optional
 from google.cloud import firestore
+from app.services import ai_service
 
 router = APIRouter()
 
@@ -87,6 +88,9 @@ async def analyze_content(
                     credibility_score=analysis_result["credibility_score"],
                     category=analysis_result["category"],
                     report_summary=analysis_result["report_summary"],
+                    latitude = latitude,
+                    longitude = longitude,
+                    state = ai_service.get_state_from_coords(latitude, longitude),
                     location=firestore.GeoPoint(latitude, longitude),
                     metrics=analysis_result["metrics"],
                     source_domains=[source.get('url', '') for source in analysis_result.get("sources", [])]
