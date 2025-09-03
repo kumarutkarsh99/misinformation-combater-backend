@@ -24,12 +24,12 @@ SAFETY_SETTINGS = {
 def summarize_full_text(full_text: str) -> str:
     # ... (This function is correct and remains the same) ...
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
-    prompt = f"Please read the following document and provide a concise, one-paragraph summary of its key ideas.\n\nDOCUMENT:\n\"{full_text[:8000]}\""
+    prompt = f"Please read the following document and provide a concise, one-paragraph summary of its key ideas.\n\nDOCUMENT:\n\"{full_text}\""
     try:
         response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
         if not response.parts:
             print("Error summarizing full text: Response was blocked by safety filters.")
-            return full_text[:1000]
+            return full_text[:8000]
         return response.text.strip()
     except Exception as e:
         print(f"Error summarizing full text: {e}")
