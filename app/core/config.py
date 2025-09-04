@@ -4,7 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 def load_trusted_sources() -> List[str]:
-    """Loads the list of trusted domains from the JSON file."""
+    """
+    Loads the list of trusted domains from the JSON file.
+    """
+
     json_path = Path(__file__).parent / "trusted_sources.json"
     if not json_path.is_file():
         return []
@@ -25,8 +28,6 @@ class Settings(BaseSettings):
 
     GEMINI_API_KEY: str
     
-    # Load the trusted sources list into your settings
     TRUSTED_SOURCES: List[str] = load_trusted_sources()
 
-# Create a single instance of the settings
 settings = Settings()

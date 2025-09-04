@@ -18,7 +18,6 @@ origins = [
     "https://misinformation-combater-frontend-386097269689.europe-west1.run.app"
 ]
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

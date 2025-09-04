@@ -3,7 +3,10 @@ from typing import Optional, Dict, Any
 from app.core.config import settings
 
 def search_credible_sources(query: str) -> Optional[Dict[str, Any]]:
-    """Searches a query using the configured credible sources search engine."""
+    """
+    Searches a query using the configured credible sources search engine.
+    """
+    
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
         "key": settings.SEARCH_API_KEY,

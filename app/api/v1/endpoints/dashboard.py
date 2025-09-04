@@ -8,7 +8,10 @@ router = APIRouter()
 
 @router.get("/heatmap")
 async def get_heatmap_data():
-    """Endpoint to provide rich data for the misinformation heatmap."""
+    """
+    Endpoint to provide rich data for the misinformation heatmap.
+    """
+
     reports = database_service.get_reports_since(days=30)
     
     points = []
@@ -31,7 +34,10 @@ async def get_heatmap_data():
 
 @router.get("/recentReports")
 async def get_heatmap_data():
-    """Endpoint to provide data for the misinformation heatmap."""
+    """
+    Endpoint to provide data for the misinformation heatmap.
+    """
+
     reports = database_service.get_reports_since(days=30)
 
     result = []
@@ -42,7 +48,10 @@ async def get_heatmap_data():
 
 @router.get("/categories")
 async def get_category_data():
-    """Endpoint to provide data for the category pie chart with fuzzy matching."""
+    """
+    Endpoint to provide data for the category pie chart with fuzzy matching.
+    """
+    
     reports = database_service.get_reports_since(days=30)
     
     canonical_categories = [ "Health", "Political", "Financial", "Science", "Social", "Satire", "Geopolitics", "Other" ]

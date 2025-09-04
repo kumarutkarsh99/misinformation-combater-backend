@@ -1,5 +1,11 @@
+
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Optional
+
+"""
+Pydantic schemas for analysis responses.
+Defines structures for metrics, sources, raw data, and the overall analysis result.
+"""
 
 class Metrics(BaseModel):
     clarity: int

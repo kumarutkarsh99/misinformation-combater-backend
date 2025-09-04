@@ -8,7 +8,10 @@ db = firestore.Client(project=settings.GCP_PROJECT, database="misinfo-reports")
 print("Firestore client initialized successfully.")
 
 def save_report(report_data: Report):
-    """Saves a report document to the 'reports' collection."""
+    """
+    Saves a report document to the 'reports' collection.
+    """
+
     try:
         reports_collection = db.collection('reports')
         reports_collection.add(report_data.model_dump())
@@ -18,7 +21,9 @@ def save_report(report_data: Report):
 
 
 def get_reports_since(days: int):
-    """Fetches all reports from the last X days as a list of dictionaries."""
+    """
+    Fetches all reports from the last X days as a list of dictionaries.
+    """
     time_threshold = datetime.now(timezone.utc) - timedelta(days=days)
     reports_ref = db.collection('reports').where('timestamp', '>=', time_threshold)
     return [doc.to_dict() for doc in reports_ref.stream()]

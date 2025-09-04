@@ -8,10 +8,7 @@ import PyPDF2
 import docx
 from geopy.geocoders import Nominatim
 
-# Configure the Gemini API key
 genai.configure(api_key=settings.GEMINI_API_KEY)
-
-# Define safety settings as a constant
 SAFETY_SETTINGS = {
     'HARM_CATEGORY_HARASSMENT': 'BLOCK_ONLY_HIGH',
     'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_ONLY_HIGH',
@@ -20,6 +17,10 @@ SAFETY_SETTINGS = {
 }
 
 def summarize_full_text(full_text: str) -> str:
+    """
+    Summarize large text content using Gemini.
+    """
+
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     prompt = f"Please read the following document and provide a concise, one-paragraph summary of its key ideas.\n\nDOCUMENT:\n\"{full_text}\""
     try:
@@ -46,7 +47,10 @@ def generate_search_query(text_to_summarize: str) -> str:
         return text_to_summarize[:100]
 
 def transcribe_audio(file_contents: bytes, mime_type: str) -> str:
-    """Uses Gemini 1.5 Pro to transcribe an audio file."""
+    """
+    Transcribe audio input to text.
+    """
+
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     
     audio_part = {
@@ -68,6 +72,9 @@ def transcribe_audio(file_contents: bytes, mime_type: str) -> str:
 
 
 def analyze_image_with_ai(file_contents: bytes, mime_type: str) -> str:
+    """
+    Extract text from an image using Gemini OCR.
+    """
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     image_part = {"mime_type": mime_type, "data": file_contents}
     prompt = "Extract all text from the following image using Optical Character Recognition (OCR). Provide only the extracted text."
@@ -79,6 +86,9 @@ def analyze_image_with_ai(file_contents: bytes, mime_type: str) -> str:
         return None
 
 def extract_text_from_doc(file_contents: bytes) -> str:
+    """
+    Extract plain text from a doc file.
+    """
     try:
         doc = docx.Document(io.BytesIO(file_contents))
         return "\n".join([para.text for para in doc.paragraphs])
@@ -87,6 +97,9 @@ def extract_text_from_doc(file_contents: bytes) -> str:
         return None
 
 def extract_text_from_pdf(file_contents: bytes) -> str:
+    """
+    Extract plain text from a PDF file.
+    """
     try:
         pdf_reader = PyPDF2.PdfReader(io.BytesIO(file_contents))
         return "".join(page.extract_text() for page in pdf_reader.pages)
@@ -95,6 +108,10 @@ def extract_text_from_pdf(file_contents: bytes) -> str:
         return None
 
 def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
+    """
+    Run misinformation/content analysis on text using Gemini.
+    """
+
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     raw_text = ""
     prompt = f"""

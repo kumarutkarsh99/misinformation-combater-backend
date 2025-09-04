@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, HTTPException, Form, UploadFile, File
 from app.schemas.analysis import AnalysisResponse
 from app.services import scraping_service, search_service, ai_service
@@ -17,6 +18,11 @@ async def analyze_content(
     longitude: Optional[float] = Form(None),
     file: Optional[UploadFile] = File(None)
 ):
+    """
+    API endpoint for analyzing user-provided content.
+    Handles text, URLs, and file uploads (audio, image, pdf, docx, text),
+    runs AI analysis, searches credible sources, and saves reports if location is provided.
+    """
     
     content_to_analyze = ""
 
