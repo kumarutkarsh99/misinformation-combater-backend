@@ -127,7 +127,7 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
     Respond ONLY with a JSON object with the following structure. Do not add any text before or after the JSON object.
     {{
       "credibility_score": <An integer from 0 (Highly Misleading) to 100 (Highly Credible)>,
-      "category": "<A short category like 'Health Misinformation', 'Financial Scam', 'Political Disinformation', or 'Satire'>",
+      "category": "<A short category in one of the following: 'Health', 'Political', 'Financial', 'Science', 'Social', 'Satire', 'Geopolitics', 'Other'>",
       "key_entities": ["<A list of the main people, places, or topics mentioned>"],
       "report_summary": "<A brief, one-sentence summary of why the content is misleading.>",
       "analysis": "<A detailed, one-paragraph explanation of why the content is misleading, based on the context. Explain the manipulative techniques used, if any.>",
