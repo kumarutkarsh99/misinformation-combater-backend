@@ -21,5 +21,4 @@ def get_reports_since(days: int):
     """Fetches all reports from the last X days as a list of dictionaries."""
     time_threshold = datetime.now(timezone.utc) - timedelta(days=days)
     reports_ref = db.collection('reports').where('timestamp', '>=', time_threshold)
-    # Convert each document to a dictionary
     return [doc.to_dict() for doc in reports_ref.stream()]

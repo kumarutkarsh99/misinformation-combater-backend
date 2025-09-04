@@ -18,10 +18,7 @@ async def get_traffic_data():
     """
     reports = database_service.get_reports_since(days=30)
     now = datetime.now(timezone.utc)
-
-    # --- Daily Data (Last 24 hours by hour) ---
     daily_threshold = now - timedelta(days=1)
-    # Use a dictionary to store counts for each hour
     hourly_stats = defaultdict(lambda: {"reports": 0, "total_misinfo_count": 0})
     
     daily_reports = [r for r in reports if r['timestamp'] >= daily_threshold]
@@ -42,7 +39,6 @@ async def get_traffic_data():
         })
     daily_total_misinfo = sum(stats['total_misinfo_count'] for stats in hourly_stats.values())
 
-    # --- Weekly Data (Last 7 days by day name) ---
     weekly_threshold = now - timedelta(days=7)
     day_stats = defaultdict(lambda: {"reports": 0, "total_misinfo_count": 0})
     
@@ -63,7 +59,6 @@ async def get_traffic_data():
             "total_misinfo_count": stats["total_misinfo_count"]
         })
 
-    # --- Monthly Data (Last 30 days by date) ---
     date_stats = defaultdict(lambda: {"reports": 0, "total_misinfo_count": 0})
     
     for report in reports:

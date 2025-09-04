@@ -3,7 +3,6 @@ from app.services import database_service
 from collections import Counter
 from google.cloud import firestore
 from thefuzz import process as fuzzy_process
-from app.services import ai_service
 
 router = APIRouter()
 
@@ -47,13 +46,22 @@ async def get_category_data():
     reports = database_service.get_reports_since(days=30)
     
     canonical_categories = [
-        "Health", 
-        "Political", 
-        "Financial", 
-        "Science", 
-        "Social", 
-        "Satire",
-        "Geopolitics",
+        "Health & Medicine",
+        "Politics & Elections",
+        "Economy & Finance",
+        "Science & Technology",
+        "Climate & Environment",
+        "Social & Culture",
+        "Religion & Spirituality",
+        "Geopolitics & International Affairs",
+        "Satire & Parody",
+        "Crime & Law",
+        "Education & Academia",
+        "Technology & Cybersecurity",
+        "Entertainment & Media",
+        "Sports",
+        "Business & Corporate",
+        "Conspiracy Theories",
         "Other"
     ]
     

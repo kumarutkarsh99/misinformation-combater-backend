@@ -30,7 +30,7 @@ async def analyze_content(
             content_to_analyze = ai_service.analyze_image_with_ai(file_contents, mime_type)
         elif "pdf" in mime_type:
             content_to_analyze = ai_service.extract_text_from_pdf(file_contents)
-        elif "openxmlformats-officedocument" in mime_type: # This is for .docx
+        elif "openxmlformats-officedocument" in mime_type:
             content_to_analyze = ai_service.extract_text_from_doc(file_contents)
         elif "text" in mime_type:
             content_to_analyze = file_contents.decode('utf-8')

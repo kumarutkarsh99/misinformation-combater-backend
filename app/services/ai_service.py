@@ -19,10 +19,7 @@ SAFETY_SETTINGS = {
     'HARM_CATEGORY_DANGEROUS_CONTENT': 'BLOCK_ONLY_HIGH',
 }
 
-# --- Text Extraction and Generation Functions ---
-
 def summarize_full_text(full_text: str) -> str:
-    # ... (This function is correct and remains the same) ...
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     prompt = f"Please read the following document and provide a concise, one-paragraph summary of its key ideas.\n\nDOCUMENT:\n\"{full_text}\""
     try:
@@ -36,7 +33,6 @@ def summarize_full_text(full_text: str) -> str:
         return full_text[:1000]
 
 def generate_search_query(text_to_summarize: str) -> str:
-    # ... (This function is correct and remains the same) ...
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     prompt = f"Read the following text and summarize it into a clean, simple search engine query of 5-10 keywords.\n\nTEXT:\n\"{text_to_summarize}\"\n\nSEARCH QUERY:"
     try:
@@ -53,7 +49,6 @@ def transcribe_audio(file_contents: bytes, mime_type: str) -> str:
     """Uses Gemini 1.5 Pro to transcribe an audio file."""
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     
-    # CORRECTED LOGIC: Pass audio data directly as a 'Part'
     audio_part = {
         "mime_type": mime_type,
         "data": file_contents
@@ -73,7 +68,6 @@ def transcribe_audio(file_contents: bytes, mime_type: str) -> str:
 
 
 def analyze_image_with_ai(file_contents: bytes, mime_type: str) -> str:
-    # ... (This function is correct and remains the same) ...
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     image_part = {"mime_type": mime_type, "data": file_contents}
     prompt = "Extract all text from the following image using Optical Character Recognition (OCR). Provide only the extracted text."
@@ -85,7 +79,6 @@ def analyze_image_with_ai(file_contents: bytes, mime_type: str) -> str:
         return None
 
 def extract_text_from_doc(file_contents: bytes) -> str:
-    # ... (This function is correct and remains the same) ...
     try:
         doc = docx.Document(io.BytesIO(file_contents))
         return "\n".join([para.text for para in doc.paragraphs])
@@ -94,7 +87,6 @@ def extract_text_from_doc(file_contents: bytes) -> str:
         return None
 
 def extract_text_from_pdf(file_contents: bytes) -> str:
-    # ... (This function is correct and remains the same) ...
     try:
         pdf_reader = PyPDF2.PdfReader(io.BytesIO(file_contents))
         return "".join(page.extract_text() for page in pdf_reader.pages)
@@ -102,10 +94,7 @@ def extract_text_from_pdf(file_contents: bytes) -> str:
         print(f"Error reading PDF file: {e}")
         return None
 
-# --- Main Analysis Function ---
-
 def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
-    # ... (This function is correct and remains the same) ...
     model = genai.GenerativeModel("gemini-1.5-pro-latest")
     raw_text = ""
     prompt = f"""

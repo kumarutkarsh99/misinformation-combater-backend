@@ -5,7 +5,6 @@ from typing import List
 
 def load_trusted_sources() -> List[str]:
     """Loads the list of trusted domains from the JSON file."""
-    # Build a path to the file relative to this config file
     json_path = Path(__file__).parent / "trusted_sources.json"
     if not json_path.is_file():
         return []
