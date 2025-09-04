@@ -82,7 +82,7 @@ async def get_category_data():
     normalized_counts = Counter()
     for raw_category, count in raw_category_counts.items():
         best_match, score = fuzzy_process.extractOne(raw_category, canonical_categories)
-        if score > 75:
+        if score > 60:
             normalized_counts[best_match] += count
         else:
             normalized_counts["Other"] += count
