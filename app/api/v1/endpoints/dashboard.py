@@ -45,44 +45,14 @@ async def get_category_data():
     """Endpoint to provide data for the category pie chart with fuzzy matching."""
     reports = database_service.get_reports_since(days=30)
     
-    canonical_categories = [
-        "Health",
-        "Medicine",
-        "Politics",
-        "Elections",
-        "Economy",
-        "Finance",
-        "Science",
-        "Technology",
-        "Climate",
-        "Environment",
-        "Culture",
-        "Religion",
-        "Spirituality",
-        "Geopolitics",
-        "International Affairs",
-        "Satire",
-        "Parody",
-        "Crime",
-        "Law",
-        "Education",
-        "Academia",
-        "Cybersecurity",
-        "Entertainment",
-        "Media",
-        "Sports",
-        "Business",
-        "Corporate",
-        "Conspiracy Theories",
-        "Other"
-    ]
+    canonical_categories = [ "Health", "Political", "Financial", "Science", "Social", "Satire", "Geopolitics", "Other" ]
     
     raw_category_counts = Counter(report.get('category') for report in reports if report.get('category'))
 
     normalized_counts = Counter()
     for raw_category, count in raw_category_counts.items():
         best_match, score = fuzzy_process.extractOne(raw_category, canonical_categories)
-        if score > 60:
+        if score > 75:
             normalized_counts[best_match] += count
         else:
             normalized_counts["Other"] += count
