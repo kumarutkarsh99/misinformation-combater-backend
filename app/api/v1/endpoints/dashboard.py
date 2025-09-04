@@ -54,6 +54,12 @@ async def get_category_data():
     
     reports = database_service.get_reports_since(days=30)
     
+    result = []
+    for report in reports:
+        if(report.get('credibility_score') < 74):
+            result.append(report)
+    reports = result
+    
     canonical_categories = [ "Health", "Political", "Financial", "Science", "Social", "Satire", "Geopolitics", "Other" ]
     
     raw_category_counts = Counter(report.get('category') for report in reports if report.get('category'))
