@@ -96,7 +96,7 @@ async def get_radar_data():
     Endpoint to provide the average of all metrics for the radar chart,
     calculated from reports in the last 48 hours.
     """
-    reports = database_service.get_reports_since(days=2)
+    reports = database_service.get_reports_since(days=30)
     
     total_reports = 0
     valid_reports = 0
@@ -143,7 +143,7 @@ async def get_sources_data():
     Endpoint to get a list of the most frequently used source domains
     from reports in the last 48 hours, represented as percentages.
     """
-    reports = database_service.get_reports_since(days=2)
+    reports = database_service.get_reports_since(days=30)
     
     all_domains = list(chain.from_iterable(
         [urlparse(url).netloc for url in report.get('source_domains', [])] 
