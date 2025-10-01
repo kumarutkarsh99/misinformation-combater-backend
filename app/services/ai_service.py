@@ -21,7 +21,7 @@ def summarize_full_text(full_text: str) -> str:
     Summarize large text content using Gemini.
     """
 
-    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("gemini-2.5-pro")
     prompt = f"Please read the following document and provide a concise, one-paragraph summary of its key ideas.\n\nDOCUMENT:\n\"{full_text}\""
     try:
         response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
@@ -34,7 +34,7 @@ def summarize_full_text(full_text: str) -> str:
         return full_text[:1000]
 
 def generate_search_query(text_to_summarize: str) -> str:
-    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("gemini-2.5-pro")
     prompt = f"Read the following text and summarize it into a clean, simple search engine query of 5-10 keywords.\n\nTEXT:\n\"{text_to_summarize}\"\n\nSEARCH QUERY:"
     try:
         response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
@@ -51,7 +51,7 @@ def transcribe_audio(file_contents: bytes, mime_type: str) -> str:
     Transcribe audio input to text.
     """
 
-    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("gemini-2.5-pro")
     
     audio_part = {
         "mime_type": mime_type,
@@ -75,7 +75,7 @@ def analyze_image_with_ai(file_contents: bytes, mime_type: str) -> str:
     """
     Extract text from an image using Gemini OCR.
     """
-    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("gemini-2.5-pro")
     image_part = {"mime_type": mime_type, "data": file_contents}
     prompt = "Extract all text from the following image using Optical Character Recognition (OCR). Provide only the extracted text."
     try:
@@ -112,7 +112,7 @@ def analyze_content_with_ai(user_content: str, search_context: str) -> dict:
     Run misinformation/content analysis on text using Gemini.
     """
 
-    model = genai.GenerativeModel("gemini-1.5-pro-latest")
+    model = genai.GenerativeModel("gemini-2.5-pro")
     raw_text = ""
     prompt = f"""
     You are a neutral, unbiased fact-checking analyst. Your task is to analyze user-submitted content against trusted search results and provide a detailed report as a JSON object.
